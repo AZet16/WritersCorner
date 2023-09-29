@@ -9,6 +9,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path"; //native packajes, this comes with node already
 import { fileURLToPath } from "url"; // allow to properly set the paths when confuguring directories
+import { register } from "./controllers.auth.js";
 
 /*Configurations*/
 //functions that run in between, in this case use only when use package json with type module
@@ -16,7 +17,6 @@ import { fileURLToPath } from "url"; // allow to properly set the paths when con
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
-
 console.log(process.env);
 const app = express();
 app.use(express.json());
@@ -40,6 +40,14 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+
+/*Authentication */
+
+/* Routes with files */
+app.post("/auth/register", upload.single("picture"), register); //middleware function to save into storage
+//register is a controller a function
+
+
 
 /*Mongoose setup */
 
