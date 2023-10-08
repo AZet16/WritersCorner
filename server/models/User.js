@@ -2,12 +2,6 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
     {
-        id: {
-            type: String,
-            required: true,
-            min: 2,
-            max: 50,
-        },
         firstName: {
             type: String,
             required: true,

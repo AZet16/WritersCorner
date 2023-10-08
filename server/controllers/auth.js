@@ -49,5 +49,29 @@ export const register = async (req, res) => { //should be asynchronous as it's a
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-    
+
+};
+
+/*Login */
+ 
+export const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email: email });
+
+        if (!user) return res.status(400).json({ msg: "User with such email does not exist" });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).json({ msg: "Password is incorrect" });
+        
+        //use token to assign the id of a user and pass a secret string
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        delete user.password; // delete password to avoid being seen
+        res.status(200).json({ token, user });
+        //usually professional development would involve third party or special cybersecurity team to deal with authentication
+        //method used here is basic for small trial projects
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 }

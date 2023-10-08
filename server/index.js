@@ -9,7 +9,15 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path"; //native packajes, this comes with node already
 import { fileURLToPath } from "url"; // allow to properly set the paths when confuguring directories
-import { register } from "./controllers.auth.js";
+import authRoutes from "/.routes/auth.js"; //routs to a feature like auth
+import userRoutes from "/.routes/users.js"; //routs to a feature like auth
+import postRoutes from "/.routes/posts.js"; //routs to a feature like auth
+
+import { register } from "./controllers/auth.js";
+import { createPost } from "./controllers/posts.js";
+
+import { verifyToken } from "./middleware/auth.js";
+
 
 /*Configurations*/
 //functions that run in between, in this case use only when use package json with type module
@@ -43,10 +51,16 @@ const upload = multer({ storage });
 
 /*Authentication */
 
-/* Routes with files */
+/* Routes with files: special case when need to upload a file */
 app.post("/auth/register", upload.single("picture"), register); //middleware function to save into storage
 //register is a controller a function
+app.post("/posts", verifyToken, upload.single("picture"), createPost);//will grab picture property and upload it into the local storage
 
+
+/*All other routes: */
+app.use("/auth", authRoutes); //set up routes to keep files organised and clean
+app.use("/users", userRoutes);
+app.use("/posts", postRoutes);
 
 
 /*Mongoose setup */
