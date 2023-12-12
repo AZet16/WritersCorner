@@ -37,7 +37,6 @@ app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets"))); //where to store media files (localy in this case)
 
 /* File Storage */
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/assets"); // name of the folder where a file will be saved
@@ -65,7 +64,7 @@ app.use("/posts", postRoutes);
 
 /*Mongoose setup */
 
-const PORT = process.env.PORT || 6001;
+const PORT = process.env.PORT || 6001; //backup port
 const url = process.env.MONGO_URL;
 mongoose
   .connect(process.env.MONGO_URL, {
